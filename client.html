@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interfaccia API</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+  }
+  h1 {
+    margin-bottom: 20px;
+  }
+  .input-container {
+    margin-bottom: 10px;
+  }
+  .input-container label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  .input-container select,
+  .input-container input {
+    width: 300px;
+    padding: 8px;
+    font-size: 16px;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .response {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Interfaccia API</h1>
+
+<div class="input-container">
+  <label for="tableName">Seleziona una tabella:</label>
+  <select id="tableName">
+    <option value="bar">Bar</option>
+    <option value="camera">Camera</option>
+    <option value="hotel">Hotel</option>
+    <option value="piscina">Piscina</option>
+    <option value="ristorante">Ristorante</option>
+    <option value="utente">Utente</option>
+  </select>
+</div>
+
+
+<button onclick="getData()">GET</button>
+<button onclick="postData()">POST</button>
+<button onclick="putData()">PUT</button>
+<button onclick="deleteData()">DELETE</button>
+
+<div class="response" id="response"></div>
+
+<script>
+  const apiUrl = 'http://localhost/my-app'; // Inserisci l'URL del tuo server API
+
+  async function getTables() {
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+      const tableSelect = document.getElementById('tableName');
+      // Popola la combo box con le opzioni ottenute
+      data.forEach(table => {
+        const option = document.createElement('option');
+        option.text = table;
+        option.value = table;
+        tableSelect.appendChild(option);
+      });
+      // Chiamiamo getData() dopo che la combo box è stata popolata
+      getData();
+    } catch (error) {
+      console.error('Errore durante il recupero delle tabelle:', error);
+    }
+  }
+
+  // Chiama la funzione per ottenere le tabelle al caricamento della pagina
+  getTables();
+
+  async function getData() {
+    const tableName = document.getElementById('tableName').value;
+    const id = document.getElementById('id').value;
+    const responseDiv = document.getElementById('response');
+
+    try {
+      const response = await fetch(`${apiUrl}/${tableName}`);
+      const data = await response.json();
+      responseDiv.textContent = JSON.stringify(data, null, 2);
+    } catch (error) {
+      responseDiv.textContent = 'Errore durante la richiesta GET';
+    }
+  }
+
+  // Aggiungi le altre funzioni per le richieste POST, PUT e DELETE...
+
+</script>
+
+</body>
+</html>
