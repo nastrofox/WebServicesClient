@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interfaccia Client</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+  }
+  h1 {
+    margin-bottom: 20px;
+  }
+  .input-container {
+    margin-bottom: 10px;
+  }
+  .input-container label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  .input-container select,
+  .input-container input {
+    width: 300px;
+    padding: 8px;
+    font-size: 16px;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .response {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Interfaccia Client</h1>
+
+<div class="input-container">
+    <label for="tableName">Seleziona una tabella:</label>
+    <select id="tableName">
+      <option value="bar">Bar</option>
+      <option value="camera">Camera</option>
+      <option value="hotel">Hotel</option>
+      <option value="piscina">Piscina</option>
+      <option value="ristorante">Ristorante</option>
+      <option value="utente">Utente</option>
+    </select>
+  </div><!DOCTYPE html>
+
+<button onclick="getData()">GET</button>
+<button onclick="postData()">POST</button>
+<button onclick="putData()">PUT</button>
+<button onclick="deleteData()">DELETE</button>
+
+<div class="response" id="response"></div>
+
+<script>
+  const apiUrl = 'http://localhost/my-app'; // Assicurati che l'URL sia corretta
+
+  async function getTables() {
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+      const tableSelect = document.getElementById('tableName');
+      data.forEach(table => {
+        const option = document.createElement('option');
+        option.text = table;
+        option.value = table;
+        tableSelect.appendChild(option);
+      });
+      getData(); // Chiamata GET iniziale per mostrare i dati della tabella predefinita
+    } catch (error) {
+      console.error('Errore durante il recupero delle tabelle:', error);
+    }
+  }
+
+  getTables();
+
+  async function getData() {
+    const tableName = document.getElementById('tableName').value;
+    const responseDiv = document.getElementById('response');
+
+    try {
+      const response = await fetch(`${apiUrl}/${tableName}`);
+      if (!response.ok) {
+        throw new Error('Errore nella richiesta GET');
+      }
+      const data = await response.json();
+      responseDiv.textContent = JSON.stringify(data, null, 2);
+    } catch (error) {
+      responseDiv.textContent = error.message;
+    }
+  }
+
+  async function postData() {
+    const tableName = document.getElementById('tableName').value;
+    const id = document.getElementById('id').value;
+    const responseDiv = document.getElementById('response');
+
+    try {
+      const response = await fetch(`${apiUrl}/${tableName}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id: id }) // Aggiungi qui i dati da inviare nel corpo della richiesta POST
+      });
+      if (!response.ok) {
+        throw new Error('Errore nella richiesta POST');
+      }
+      const data = await response.json();
+      responseDiv.textContent = JSON.stringify(data, null, 2);
+    } catch (error) {
+      responseDiv.textContent = error.message;
+    }
+  }
+
+  async function putData() {
+    const tableName = document.getElementById('tableName').value;
+    const id = document.getElementById('id').value;
+    const responseDiv = document.getElementById('response');
+
+    try {
+      const response = await fetch(`${apiUrl}/${tableName}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id: id }) // Aggiungi qui i dati da inviare nel corpo della richiesta PUT
+      });
+      if (!response.ok) {
+        throw new Error('Errore nella richiesta PUT');
+      }
+      const data = await response.json();
+      responseDiv.textContent = JSON.stringify(data, null, 2);
+    } catch (error) {
+      responseDiv.textContent = error.message;
+    }
+  }
+
+  async function deleteData() {
+    const tableName = document.getElementById('tableName').value;
+    const id = document.getElementById('id').value;
+    const responseDiv = document.getElementById('response');
+
+    try {
+      const response = await fetch(`${apiUrl}/${tableName}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id: id }) // Aggiungi qui i dati da inviare nel corpo della richiesta DELETE
+      });
+      if (!response.ok) {
+        throw new Error('Errore nella richiesta DELETE');
+      }
+      const data = await response.json();
+      responseDiv.textContent = JSON.stringify(data, null, 2);
+    } catch (error) {
+      responseDiv.textContent = error.message;
+    }
+  }
+
+</script>
+
+</body>
+</html>
